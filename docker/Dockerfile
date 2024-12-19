@@ -4,7 +4,6 @@ ARG JAR_FILE=esdemo2-0.1.jar
 RUN mkdir -p /esdemo
 WORKDIR /esdemo
 ## 将后端项目的 Jar 文件，复制到镜像中
-COPY /docker/config config/
 COPY ${JAR_FILE} app.jar
 
 ## 设置 TZ 时区
