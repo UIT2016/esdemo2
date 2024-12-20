@@ -11,6 +11,9 @@ RUN mvn -f pom.xml clean package
 #开始docker构建
 FROM ccr.ccs.tencentyun.com/mmkj_1_20241218/jre17:v1
 ARG JAR_FILE=target/esdemo2-0.1.jar
+WORKDIR /u01
+# 从Maven构建阶段复制构建的jar文件
+COPY --from=maven-build /esdemo/target/esdemo2-0.1.jar ./esdemo.jar
 ## 设置 TZ 时区
 ENV TZ=Asia/Shanghai
 ## 设置 JAVA_OPTS 环境变量，可通过 docker run -e "JAVA_OPTS=" 进行覆盖
@@ -23,6 +26,6 @@ ENV ARGS=""
 EXPOSE 8080
 
 ## 启动后端项目
-CMD java ${JAVA_OPTS} -jar app.jar $ARGS
+CMD java ${JAVA_OPTS} -jar esdemo.jar $ARGS
 
 
