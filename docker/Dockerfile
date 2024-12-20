@@ -1,4 +1,4 @@
-FROM jre17
+FROM ccr.ccs.tencentyun.com/mmkj_1_20241218/jre17
 ARG JAR_FILE=esdemo2-0.1.jar
 ## 创建目录，并使用它作为工作目录
 RUN mkdir -p /esdemo
