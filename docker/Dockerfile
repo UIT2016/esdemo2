@@ -42,7 +42,7 @@ RUN rm -rf /var/cache/apk/* \
 
 ## 启动后端项目
 #CMD nohup /usr/local/filebeat/filebeat -e -c /u01.filebeat.yml & && java ${JAVA_OPTS} -jar esdemo.jar $ARGS
-CMD ["/bin/sh", "-c", "nohup /usr/local/filebeat/filebeat -e -c /u01/filebeat.yml & exec java ${JAVA_OPTS} -jar esdemo.jar $ARGS"]
+CMD ["/bin/bash", "-c", "nohup /usr/local/filebeat/filebeat -e -c /u01/filebeat.yml & exec java ${JAVA_OPTS} -jar esdemo.jar $ARGS"]
 
 
 
