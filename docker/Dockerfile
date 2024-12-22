@@ -13,6 +13,9 @@ FROM ccr.ccs.tencentyun.com/mmkj_1_20241218/jre17:v1
 ARG JAR_FILE=target/esdemo2-0.1.jar
 WORKDIR /u01
 COPY config/filebeat.yml .
+
+# 安装 curl 和 tar
+RUN apk update && apk add curl tar
 #配置filebeat
 RUN cd /usr/local \
     && curl -o filebeat.tar.gz https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-8.14.1-linux-x86_64.tar.gz \
@@ -31,6 +34,10 @@ ENV ARGS=""
 
 ## 暴露后端项目的 8080 端口
 EXPOSE 8080
+
+# 清理缓存和临时文件
+RUN rm -rf /var/cache/apk/* \
+    && rm -rf /tmp/*
 
 ## 启动后端项目
 #CMD nohup /usr/local/filebeat/filebeat -e -c /u01.filebeat.yml & && java ${JAVA_OPTS} -jar esdemo.jar $ARGS
