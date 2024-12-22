@@ -19,7 +19,8 @@ RUN apk update && apk add curl tar
 #配置filebeat
 RUN cd /usr/local \
     && curl -o filebeat.tar.gz https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-8.14.1-linux-x86_64.tar.gz \
-    && tar zxf filebeat.tar.gz filebeat \
+    && tar zxf filebeat.tar.gz \
+    && mv filebeat-8.14.1-linux-x86_64 filebeat \
     && rm filebeat.tar.gz
 
 # 从Maven构建阶段复制构建的jar文件
