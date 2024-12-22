@@ -6,12 +6,19 @@ WORKDIR /esdemo
 COPY pom.xml .
 COPY src ./src
 # 使用Maven构建项目
-RUN mvn -f pom.xml clean package
+RUN mvn  clean package
 
 #开始docker构建
 FROM ccr.ccs.tencentyun.com/mmkj_1_20241218/jre17:v1
 ARG JAR_FILE=target/esdemo2-0.1.jar
 WORKDIR /u01
+COPY config/filebeat.yml .
+#配置filebeat
+RUN cd /usr/local \
+    && curl -o filebeat.tar.gz https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-8.14.1-linux-x86_64.tar.gz \
+    && tar zxf filebeat.tar.gz filebeat \
+    && rm filebeat.tar.gz
+
 # 从Maven构建阶段复制构建的jar文件
 COPY --from=maven-build /esdemo/target/esdemo2-0.1.jar ./esdemo.jar
 ## 设置 TZ 时区
@@ -26,6 +33,9 @@ ENV ARGS=""
 EXPOSE 8080
 
 ## 启动后端项目
-CMD java ${JAVA_OPTS} -jar esdemo.jar $ARGS
+#CMD nohup /usr/local/filebeat/filebeat -e -c /u01.filebeat.yml & && java ${JAVA_OPTS} -jar esdemo.jar $ARGS
+CMD ["/bin/sh", "-c", "nohup /usr/local/filebeat/filebeat -e -c /u01/filebeat.yml & exec java ${JAVA_OPTS} -jar esdemo.jar $ARGS"]
+
+
 
 
